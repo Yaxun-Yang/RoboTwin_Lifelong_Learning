@@ -11,7 +11,7 @@ import envs._GLOBAL_CONFIGS as CONFIGS
 
 
 try:
-    # ********************** CuroboPlanner (optional) **********************
+# ********************** CuroboPlanner (optional) **********************
     from curobo.types.math import Pose as CuroboPose
     import time
     from curobo.types.robot import JointState
@@ -170,7 +170,7 @@ try:
             Output:
                 - result['status']: numpy array of string values indicating "Success"/"Fail" for each pose
                 - result['position']: numpy array of joint positions with shape (n x m x l)
-                  where n is number of target poses, m is number of waypoints, l is number of joints
+                    where n is number of target poses, m is number of waypoints, l is number of joints
                 - result['velocity']: numpy array of joint velocities with same shape as position
             """
 

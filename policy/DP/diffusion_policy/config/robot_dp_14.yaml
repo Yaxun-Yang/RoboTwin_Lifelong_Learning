@@ -98,6 +98,14 @@ training:
   seed: 42
   debug: False
   resume: True
+  # MODIFIED_BY_SW: Load Pretrained
+  pretrained_ckpt: null
+  enable_pretrained: False
+  lr_finetune_scale: 0.5
+  # MODIFIED_BY_SW: Replay
+  replay:
+    enable: False
+    spec: ""
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500
@@ -110,7 +118,7 @@ training:
   # training loop control
   # in epochs
   rollout_every: 50
-  checkpoint_every: 300
+  checkpoint_every: 100
   val_every: 1
   sample_every: 5
   # steps per epoch
