@@ -130,7 +130,6 @@ def main(usr_args):
         video_size = str(camera_config["w"]) + "x" + str(camera_config["h"])
         video_save_dir.mkdir(parents=True, exist_ok=True)
         args["eval_video_save_dir"] = video_save_dir
-    print(args["eval_video_save_dir"], '*'*100)
 
     # output camera config
     print("============= Config =============\n")
@@ -160,8 +159,7 @@ def main(usr_args):
 
     st_seed = 100000 * (1 + seed)
     suc_nums = []
-    # test_num = 100
-    test_num = 50
+    test_num = 100
     topk = 1
 
     model = get_model(usr_args)
@@ -218,7 +216,6 @@ def eval_policy(task_name,
     args["eval_mode"] = True
 
     while succ_seed < test_num:
-        print(succ_seed, test_num, 'test_num===================')
         render_freq = args["render_freq"]
         args["render_freq"] = 0
 
@@ -252,7 +249,7 @@ def eval_policy(task_name,
         else:
             now_seed += 1
             args["render_freq"] = render_freq
-            # continue
+            continue
 
         args["render_freq"] = render_freq
 
@@ -260,16 +257,8 @@ def eval_policy(task_name,
         episode_info_list = [episode_info["info"]]
         results = generate_episode_descriptions(args["task_name"], episode_info_list, test_num)
         instruction = np.random.choice(results[0][instruction_type])
-        
-        
-        # Debug: show generated instructions and use them as-is (do NOT override)
-        # print(results, instruction_type, instruction, '6'*100, results[0])
-        
-        
         TASK_ENV.set_instruction(instruction=instruction)  # set language instruction
 
-        
-        print(TASK_ENV.eval_video_path, '='*20)
         if TASK_ENV.eval_video_path is not None:
             ffmpeg = subprocess.Popen(
                 [

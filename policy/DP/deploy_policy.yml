@@ -8,5 +8,4 @@ instruction_type: unseen
 
 expert_data_num: null
 checkpoint_num: 600
-head_camera_type: D435gpi
-eval_ckpt_path: null  # MODIFIED_BY_SW: allow overriding checkpoint path when evaluating
+head_camera_type: D435
