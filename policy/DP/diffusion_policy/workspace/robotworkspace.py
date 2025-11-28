@@ -260,9 +260,22 @@ class RobotWorkspace(BaseWorkspace):
 
                 # checkpoint
                 if ((self.epoch + 1) % cfg.training.checkpoint_every) == 0:
-                    # checkpointing
-                    save_name = pathlib.Path(self.cfg.task.dataset.zarr_path).stem
-                    self.save_checkpoint(f"checkpoints/{save_name}-{seed}/{self.epoch + 1}.ckpt")  # TODO
+                    # checkpointing MODIFIED_BY_SW
+                    ds_cfg = self.cfg.task.dataset
+                    raw_path = getattr(ds_cfg, 'zarr_path', None) or getattr(ds_cfg, 'main_zarr_path', None)
+                    if raw_path is None:
+                        # fallback: use task name if no path attribute (should not happen normally)
+                        raw_path = f"data/{getattr(self.cfg.task, 'name', 'unknown')}.zarr"
+                        print(f"[Checkpoint][Warn] dataset has no zarr_path/main_zarr_path, fallback='{raw_path}'")
+                    save_name = pathlib.Path(raw_path).stem
+                    replay_tag = ""
+                    if hasattr(cfg.training, 'replay') and cfg.training.replay.enable and cfg.training.replay.spec:
+                        replay_tag = "-replay-" + str(cfg.training.replay.spec).replace(':', '=').replace(',', '-')
+                    pt_tag = "-pretrained" if (hasattr(cfg.training, 'enable_pretrained') and cfg.training.enable_pretrained) else "-scratch"
+                    ckpt_dir = f"checkpoints/{save_name}{replay_tag}{pt_tag}-seed{seed}"
+                    os.makedirs(ckpt_dir, exist_ok=True)
+                    print(f"[Checkpoint] saving to folder: {ckpt_dir}")
+                    self.save_checkpoint(f"{ckpt_dir}/{self.epoch + 1}.ckpt")
 
                 # ========= eval end for this epoch ==========
                 policy.train()
